@@ -186,13 +186,6 @@ backBtnStep6.addEventListener('click', () => {
   roofAreaDisplay.textContent = "";
 });
 
-// Calculate Cost button (example - just dummy calculation for now)
-calculateCostBtn.addEventListener('click', () => {
-  // Example: calculate area based on some criteria
-  // For demo, let's assume fixed value or random for now
-  const dummyArea = (Math.random() * 200 + 50).toFixed(2);
-  roofAreaDisplay.textContent = `Estimated Roof Area: ${dummyArea} m²`;
-});
 
 // Initialize static Leaflet map in Step 6 overlay
 function initStaticMap(lat, lon) {
@@ -257,23 +250,48 @@ function fetchBuildingFootprint(lat, lon) {
   })
     .then(response => response.json())
     .then(data => {
-      if (data.elements && data.elements.length > 0) {
-        return data.elements[0];
-      } else {
-        throw new Error('No building footprint found.');
+      if (!data.elements || data.elements.length === 0) {
+        throw new Error('No buildings found.');
       }
+
+      const point = turf.point([lon, lat]);
+
+      // Try to find the building that contains the point
+      for (const element of data.elements) {
+        const polygon = convertToGeoJSONPolygon(element);
+        if (polygon && turf.booleanPointInPolygon(point, polygon)) {
+          return element; // Found the correct building
+        }
+      }
+
+      // If none contain the point, fallback to the closest one (optional)
+      return data.elements[0];
     });
 }
 
 function convertToGeoJSONPolygon(element) {
+  if (!element || !element.geometry || element.geometry.length === 0) {
+    return null;
+  }
+
   const coordinates = element.geometry.map(coord => [coord.lon, coord.lat]);
-  if (coordinates.length > 0 &&
-    (coordinates[0][0] !== coordinates[coordinates.length - 1][0] ||
-      coordinates[0][1] !== coordinates[coordinates.length - 1][1])) {
+
+  // Ensure polygon is closed
+  if (coordinates.length > 0 && 
+      (coordinates[0][0] !== coordinates[coordinates.length - 1][0] ||
+       coordinates[0][1] !== coordinates[coordinates.length - 1][1])) {
     coordinates.push(coordinates[0]);
   }
-  return turf.polygon([coordinates]);
+
+  return {
+    type: "Feature",
+    geometry: {
+      type: "Polygon",
+      coordinates: [coordinates]
+    }
+  };
 }
+
 
 function initStaticMap(lat, lon) {
   if (staticLeafletMap) {
@@ -350,3 +368,27 @@ calculateCostBtn.addEventListener('click', () => {
 
 // 📌 Example call (you can call this with user-selected coordinates):
 // initStaticMap(33.7084, -117.8214);
+
+// Step 6 - Calculate Cost button
+calculateCostBtn.addEventListener('click', () => {
+  if (!selectedLocation) {
+    alert("Location not selected.");
+    return;
+  }
+
+  fetchBuildingFootprint(selectedLocation.lat, selectedLocation.lon)
+    .then(element => {
+      const polygon = convertToGeoJSONPolygon(element);
+      if (polygon) {
+        const areaSqMeters = turf.area(polygon);
+        const areaSqFeet = areaSqMeters * 10.7639;
+        roofAreaDisplay.textContent = `Estimated Roof Area: ${areaSqFeet.toFixed(2)} ft²`;
+      } else {
+        roofAreaDisplay.textContent = "Could not determine roof area.";
+      }
+    })
+    .catch(err => {
+      console.error(err);
+      roofAreaDisplay.textContent = "Error calculating area.";
+    });
+});
