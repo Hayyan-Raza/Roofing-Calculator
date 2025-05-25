@@ -205,7 +205,7 @@ function initStaticMap(lat, lon) {
     touchZoom: false
   }).setView([lat, lon], 19);
 
-  L.tileLayer('https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+  L.tileLayer('https://{s}.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
     maxZoom: 20,
     subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
     attribution: 'Map data © Google'
@@ -293,7 +293,6 @@ function convertToGeoJSONPolygon(element) {
   };
 }
 
-
 function initStaticMap(lat, lon) {
   if (staticLeafletMap) {
     staticLeafletMap.remove();
@@ -310,9 +309,11 @@ function initStaticMap(lat, lon) {
     touchZoom: false
   }).setView([lat, lon], 19);
 
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  // ✅ Google Hybrid Tiles (Satellite + Labels)
+  L.tileLayer('https://{s}.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
     maxZoom: 20,
-    attribution: 'Map data © OpenStreetMap contributors'
+    subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+    attribution: 'Map data © Google'
   }).addTo(staticLeafletMap);
 
   staticMarker = L.marker([lat, lon], {
@@ -341,6 +342,7 @@ function initStaticMap(lat, lon) {
       roofAreaDisplay.textContent = 'Unable to detect building footprint. Please try a different location.';
     });
 }
+
 
 calculateCostBtn.addEventListener('click', () => {
   const areaSqFeet = staticLeafletMap._roofAreaSqFeet;
