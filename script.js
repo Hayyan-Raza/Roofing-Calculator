@@ -1,11 +1,12 @@
 // Initialize map with Google Satellite tiles
 const map = L.map('map').setView([48.8584, 2.2945], 13);
 
-L.tileLayer('https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+L.tileLayer('https://{s}.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
   maxZoom: 20,
   subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
   attribution: 'Map data © Google'
 }).addTo(map);
+
 
 // Draggable marker with custom icon
 let marker = L.marker([48.8584, 2.2945], {
