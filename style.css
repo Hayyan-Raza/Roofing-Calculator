@@ -1,0 +1,359 @@
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f7f9fc;
+}
+
+h2 {
+  text-align: center;
+  margin: 0;
+  padding: 20px;
+  font-size: 28px;
+  font-weight: 600;
+}
+
+#map {
+  height: 70vh;
+  width: 100%;
+}
+
+.overlay-container {
+  position: absolute;
+  top: 70%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #fff;
+  padding: 30px 25px;
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+  width: 90%;
+  max-width: 600px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.overlay-hidden {
+  display: none;
+}
+
+.search-bar {
+  width: 95%;
+  padding: 14px 20px;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  font-size: 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  margin-bottom: 10px;
+}
+
+.autocomplete-results {
+  width: 100%;
+  background: #fff;
+  border-radius: 0 0 8px 8px;
+  max-height: 150px;
+  overflow-y: auto;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+  margin-bottom: 20px;
+}
+
+.autocomplete-item {
+  padding: 10px 15px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.autocomplete-item:hover {
+  background: #f0f0f0;
+}
+
+.button-group {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.nav-btn {
+  padding: 12px 24px;
+  font-size: 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.nav-btn.back {
+  background-color: #e0e0e0;
+  color: #333;
+}
+
+.nav-btn.next {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.nav-btn.next:hover {
+  background-color: #0056b3;
+}
+
+.nav-btn.back:hover {
+  background-color: #d5d5d5;
+}
+
+.step-title {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.step-text {
+  margin: 10px 0 20px;
+  font-size: 16px;
+  color: #444;
+  text-align: center;
+}
+
+.radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  margin: 20px 0;
+}
+
+.radio-option {
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  transition: border-color 0.3s, background-color 0.3s;
+}
+
+.radio-option:hover {
+  border-color: #007bff;
+  background-color: #f2f8ff;
+}
+
+.radio-option input[type="radio"] {
+  transform: scale(1.2);
+}
+
+.radio-option span {
+  font-weight: 500;
+}
+
+
+form {
+  background: #fff;
+  padding: 30px 25px;
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+  max-width: 600px;
+  margin: 40px auto;
+  font-family: 'Segoe UI', sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+form h3 {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  text-align: center;
+}
+.radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  max-width: 100%;
+  margin: 20px 0;
+  align-items: center;
+}
+
+.radio-option {
+  width: 100%;
+  max-width: 500px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  transition: border-color 0.3s, background-color 0.3s;
+  box-sizing: border-box;
+}
+
+.radio-option:hover {
+  border-color: #007bff;
+  background-color: #f2f8ff;
+}
+
+.radio-option input[type="radio"] {
+  transform: scale(1.2);
+  cursor: pointer;
+}
+
+.button-group {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+button {
+  padding: 12px 30px;
+  font-size: 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button.back {
+  background-color: #e0e0e0;
+  color: #333;
+}
+
+button.back:hover {
+  background-color: #d5d5d5;
+}
+
+button.next {
+  background-color: #007bff;
+  color: white;
+}
+
+button.next:hover {
+  background-color: #0056b3;
+}
+.overlay-hidden {
+  display: none !important;
+}
+
+
+
+/* Overlay card styling */
+#overlayStep6 {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 400px;
+  max-width: 90vw;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+  padding: 24px 30px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Overlay hidden helper */
+.overlay-hidden {
+  display: none;
+}
+
+/* Title */
+#overlayStep6 h2 {
+  margin: 0 0 10px;
+  font-weight: 700;
+  font-size: 1.6rem;
+  color: #222;
+  text-align: center;
+  letter-spacing: 0.03em;
+}
+
+/* Static map container */
+#staticLeafletMap {
+  width: 100%;
+  height: 300px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  box-shadow: inset 0 0 8px rgba(0,0,0,0.1);
+  cursor: default;
+  margin-bottom: 10px;
+}
+
+/* Buttons container (centers buttons with gap) */
+#overlayStep6 > div:nth-child(3) {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 10px;
+}
+
+/* Buttons general style */
+#backBtnStep6,
+#calculateCostBtn {
+  padding: 12px 20px;
+  border-radius: 8px;
+  border: none;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.12);
+  user-select: none;
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+/* Back button */
+#backBtnStep6 {
+  background-color: #f0f0f0;
+  color: #555;
+}
+
+#backBtnStep6:hover {
+  background-color: #dcdcdc;
+}
+
+/* Calculate Cost button */
+#calculateCostBtn {
+  background-color: #007bff;
+  color: white;
+}
+
+#calculateCostBtn:hover {
+  background-color: #0056b3;
+}
+
+/* Roof area display */
+#roofAreaDisplay {
+  font-size: 20px;
+  text-align: center;
+  color: #333;
+  min-height: 30px;
+  user-select: none;
+}
+
+/* Responsive tweaks */
+@media (max-width: 450px) {
+  #overlayStep6 {
+    width: 90vw;
+    padding: 18px 20px;
+  }
+
+  #staticLeafletMap {
+    height: 220px;
+  }
+
+  #backBtnStep6,
+  #calculateCostBtn {
+    font-size: 0.9rem;
+    padding: 10px 16px;
+  }
+}

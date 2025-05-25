@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Find Your Roof - Nominatim</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet-draw/dist/leaflet.draw.css" />
+  
+</head>
+<body>
+
+<h2>Find Your Roof</h2>
+<div id="map"></div>
+
+<!-- Step 1: Address Search -->
+<div class="overlay-container" id="overlayStep1">
+  <input type="text" id="search" class="search-bar" placeholder="Enter your address..." autocomplete="off" />
+  <div class="autocomplete-results" id="autocomplete-list"></div>
+  <div class="button-group">
+    <button class="nav-btn back" disabled>← Back</button>
+    <button class="nav-btn next" id="nextBtnStep1" disabled>Next →</button>
+  </div>
+</div>
+
+<!-- Step 2: Marker Precision -->
+<div class="overlay-container overlay-hidden" id="overlayStep2">
+  <div class="step-title">Move the marker to the center of your roof</div>
+  <p class="step-text" id="selected-address-text"></p>
+  <div class="button-group">
+    <button class="nav-btn back" id="backBtnStep2">← Back</button>
+    <button class="nav-btn next" id="nextBtnStep2">Next →</button>
+  </div>
+</div>
+
+<!-- Step 3: Ownership (moved before roof type) -->
+<div class="overlay-container overlay-hidden" id="overlayStep3">
+  <div class="step-title">Do you own the property?</div>
+  <form id="ownershipForm" class="radio-group">
+    <label class="radio-option">
+      <input type="radio" name="ownership" value="Yes" />
+      <span>Yes, I own it</span>
+    </label>
+    <label class="radio-option">
+      <input type="radio" name="ownership" value="No" />
+      <span>No, I rent it</span>
+    </label>
+  </form>
+  <div class="button-group">
+    <button class="nav-btn back" id="backBtnStep3">← Back</button>
+    <button class="nav-btn next" id="nextBtnStep3">Next →</button>
+  </div>
+</div>
+
+<!-- Step 4: Roof Type -->
+<div class="overlay-container overlay-hidden" id="overlayStep4">
+  <div class="step-title">What type of roof do you have?</div>
+  <form id="roofForm" class="radio-group">
+    <label class="radio-option">
+      <input type="radio" name="roofType" value="Flat" />
+      <span>Flat Roof</span>
+    </label>
+    <label class="radio-option">
+      <input type="radio" name="roofType" value="Sloped" />
+      <span>Sloped Roof</span>
+    </label>
+    <label class="radio-option">
+      <input type="radio" name="roofType" value="Tiled" />
+      <span>Tiled Roof</span>
+    </label>
+  </form>
+  <div class="button-group">
+    <button class="nav-btn back" id="backBtnStep4">← Back</button>
+    <button class="nav-btn next" id="nextBtnStep4">Next →</button>
+  </div>
+</div>
+
+<!-- Step 5: Roofing Material -->
+<div id="overlayStep5" class="overlay-container">
+  <div class="step-title">Which roofing material will you use?</div>
+  <div class="step-text">Select the type of roofing material you're planning to use.</div>
+
+  <form id="roofMaterialForm" class="radio-group">
+    <label class="radio-option">
+      <input type="radio" name="roofMaterial" value="Asphalt shingles">
+      <span>Asphalt shingles</span>
+    </label>
+    <label class="radio-option">
+      <input type="radio" name="roofMaterial" value="Wood shake/composite">
+      <span>Wood shake/composite</span>
+    </label>
+    <label class="radio-option">
+      <input type="radio" name="roofMaterial" value="Metal">
+      <span>Metal</span>
+    </label>
+    <label class="radio-option">
+      <input type="radio" name="roofMaterial" value="Tile">
+      <span>Tile</span>
+    </label>
+    <label class="radio-option">
+      <input type="radio" name="roofMaterial" value="Flat, foam, single ply">
+      <span>Flat, foam, single ply</span>
+    </label>
+  </form>
+
+  <div class="button-group">
+    <button id="backBtnStep5" class="nav-btn back">← Back</button>
+    <button id="nextBtnStep5" class="nav-btn next">Next →</button>
+  </div>
+</div>
+
+
+<div id="overlayStep6" class="overlay overlay-hidden">
+  <h2>Your Roof Area</h2>
+  <div id="staticLeafletMap" style="width: 100%; height: 300px; border: 1px solid #ccc; margin-bottom: 10px;"></div>
+
+  <div style="text-align: center; margin-bottom: 10px;">
+    <button id="backBtnStep6">Back</button>
+    <button id="calculateCostBtn">Calculate Cost</button>
+  </div>
+
+  <div id="roofAreaDisplay" style="font-size: 20px; margin-top: 10px; text-align: center;">
+    <!-- Calculated area will appear here -->
+  </div>
+</div>
+
+
+
+    <script src="script.js"></script>
+    <script src="https://unpkg.com/leaflet-draw/dist/leaflet.draw.js"></script>
+</body>
+</html>
