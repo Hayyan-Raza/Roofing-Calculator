@@ -27,6 +27,7 @@ const overlayStep3 = document.getElementById("overlayStep3"); // Ownership
 const overlayStep4 = document.getElementById("overlayStep4"); // Roof Type
 const overlayStep5 = document.getElementById("overlayStep5"); // Roofing Material
 const overlayStep6 = document.getElementById("overlayStep6"); // Step 6 overlay
+const UserDetailsOverlay = document.getElementById("userDetailsForm"); //Email form overlay
 const selectedAddressText = document.getElementById("selected-address-text");
 const nextBtnStep1 = document.getElementById("nextBtnStep1");
 
@@ -166,7 +167,9 @@ document.getElementById("backBtnStep5").addEventListener("click", () => {
   overlayStep4.classList.remove("overlay-hidden");
 });
 
-// Step 5 next button -> Show Step 6
+
+
+// Step 5 next button -> Show Step Email
 document.getElementById("nextBtnStep5").addEventListener("click", () => {
   const selectedMaterial = document.querySelector('input[name="roofMaterial"]:checked');
   if (!selectedMaterial) {
@@ -174,16 +177,43 @@ document.getElementById("nextBtnStep5").addEventListener("click", () => {
     return;
   }
   overlayStep5.classList.add("overlay-hidden");
+  UserDetailsOverlay.classList.remove("overlay-hidden");
+
+   // Initialize or update static map for Step 6
+  initStaticMap(selectedLocation.lat, selectedLocation.lon);
+  staticLeafletMap.invalidateSize();
+  initStaticMap(selectedLocation.lat, selectedLocation.lon);
+});
+
+
+
+// userEmail Back Btn 
+document.getElementById("backBtnStepEmail").addEventListener("click", ()=>{
+  let userName = document.getElementById("userName").value;
+let userEmail = document.getElementById("userEmail").value;
+  if(userName == null || userEmail == null ){
+    alert("Fill Info Plz");
+  }
+  UserDetailsOverlay.classList.add("overlay-hidden");
+  overlayStep5.classList.remove("overlay-hidden");
+
+});
+
+
+// userEmail Next Btn 
+document.getElementById("nextBtnStepEmail").addEventListener("click", ()=>{
+  if(userName == null || userEmail == null ){
+    alert("Fill Info Plz");
+  }
+  UserDetailsOverlay.classList.add("overlay-hidden");
   overlayStep6.classList.remove("overlay-hidden");
 
-  // Initialize or update static map for Step 6
-  initStaticMap(selectedLocation.lat, selectedLocation.lon);
 });
 
 // Step 6 back button
 backBtnStep6.addEventListener('click', () => {
   overlayStep6.classList.add("overlay-hidden");
-  overlayStep5.classList.remove("overlay-hidden");
+  UserDetailsOverlay.classList.remove("overlay-hidden");
   roofAreaDisplay.textContent = "";
 });
 
@@ -220,20 +250,6 @@ function initStaticMap(lat, lon) {
   }).addTo(staticLeafletMap);
 }
 
-// 📌 Include these scripts in your HTML <head> or before </body>:
-// <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-// <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-// <script src="https://unpkg.com/@turf/turf@6.5.0/turf.min.js"></script>
-
-// 📌 HTML must contain:
-// <div id="staticLeafletMap" style="height: 400px;"></div>
-// <div id="roofAreaDisplay"></div>
-// <div>
-//   <label><input type="radio" name="roofMaterial" value="asphalt"> Asphalt</label>
-//   <label><input type="radio" name="roofMaterial" value="metal"> Metal</label>
-//   <label><input type="radio" name="roofMaterial" value="tile"> Tile</label>
-// </div>
-// <button id="calculateCostBtn">Calculate Cost</button>
 
 function fetchBuildingFootprint(lat, lon) {
   const overpassUrl = 'https://overpass-api.de/api/interpreter';
@@ -299,7 +315,7 @@ function initStaticMap(lat, lon) {
   }
 
   staticLeafletMap = L.map('staticLeafletMap', {
-    zoomControl: false,
+    zoomControl: true,
     dragging: false,
     scrollWheelZoom: false,
     doubleClickZoom: false,
@@ -323,7 +339,8 @@ function initStaticMap(lat, lon) {
       iconAnchor: [16, 32]
     })
   }).addTo(staticLeafletMap);
-
+  
+  
   fetchBuildingFootprint(lat, lon)
     .then(building => {
       const geojsonPolygon = convertToGeoJSONPolygon(building);
@@ -334,15 +351,16 @@ function initStaticMap(lat, lon) {
 
       const latlngs = building.geometry.map(coord => [coord.lat, coord.lon]);
       L.polygon(latlngs, { color: 'blue' }).addTo(staticLeafletMap);
-
+      
       roofAreaDisplay.textContent = `Estimated Roof Area: ${areaSqFeet.toFixed(2)} sq ft`;
     })
     .catch(error => {
       console.error(error);
       roofAreaDisplay.textContent = 'Unable to detect building footprint. Please try a different location.';
     });
-}
-
+    staticLeafletMap.invalidateSize();
+  }
+  
 
 calculateCostBtn.addEventListener('click', () => {
   const areaSqFeet = staticLeafletMap._roofAreaSqFeet;
@@ -369,8 +387,6 @@ calculateCostBtn.addEventListener('click', () => {
   alert(`Estimated Roofing Cost: $${totalCost.toFixed(2)}`);
 });
 
-// 📌 Example call (you can call this with user-selected coordinates):
-// initStaticMap(33.7084, -117.8214);
 
 // Step 6 - Calculate Cost button
 calculateCostBtn.addEventListener('click', () => {
@@ -395,3 +411,80 @@ calculateCostBtn.addEventListener('click', () => {
       roofAreaDisplay.textContent = "Error calculating area.";
     });
 });
+
+
+// User email Setup 
+
+
+
+document.getElementById('calculateCostBtn').addEventListener('click', () => {
+  const name = document.getElementById('userName').value.trim();
+  const email = document.getElementById('userEmail').value.trim();
+
+  if (!name || !email) {
+    alert('Please enter both name and email.');
+    return;
+  }
+
+  userName = name;
+  userEmail = email;
+
+  console.log("User Name:", userName);
+  console.log("User Email:", userEmail);
+  SendEmail(userName,userEmail);
+});
+
+
+function SendEmail(name , email){
+  // Initialize EmailJS with your public key
+  emailjs.init("MvtKEqySbMLzmvhWu"); // replace with your actual EmailJS public key
+
+  const form = document.getElementById("userDetailsForm");
+  const backBtn = document.getElementById("backBtnStepEmail");
+
+  // Show your form container if it’s hidden
+  // form.classList.remove("overlay-hidden");
+const calculateCostBtn = document.getElementById("calculateCostBtn");
+  calculateCostBtn.addEventListener("click", function(e) {
+    e.preventDefault();
+
+    // Collect user inputs
+    const userName = document.getElementById("userName").value.trim();
+    const userEmail = document.getElementById("userEmail").value.trim();
+
+    // Collect choices from your app's other forms (replace with your actual logic)
+    const ownership = document.querySelector('input[name="ownership"]:checked')?.value || "Not specified";
+    const roofType = document.querySelector('input[name="roofType"]:checked')?.value || "Not specified";
+    const roofMaterial = document.querySelector('input[name="roofMaterial"]:checked')?.value || "Not specified";
+
+    // Get the calculated cost (from your roofAreaDisplay div or wherever it’s displayed)
+    const roofCost = document.getElementById("roofAreaDisplay")?.textContent.trim() || "Not calculated";
+
+    // Build a nicely formatted string of choices
+    const userChoices = `
+Ownership: ${ownership}
+Roof Type: ${roofType}
+Roof Material: ${roofMaterial}
+Calculated Cost: ${roofCost}
+    `;
+
+    // Prepare email template params
+    const templateParams = {
+      from_name: userName,
+      roof_cost: roofCost,
+      reply_to: userEmail,
+      user_choices: userChoices,
+      message: "A new inquiry has been submitted via Find Your Roof."
+    };
+
+    emailjs.send("service_nv5ys5a", "template_s84mvdm", templateParams)
+      .then(() => {
+        alert("Thank you! Your inquiry has been sent successfully.");
+        form.reset();
+      }, (error) => {
+        console.error("Email sending failed:", error);
+        alert("Sorry, failed to send your inquiry. Please try again later.");
+      });
+  });
+
+}

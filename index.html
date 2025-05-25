@@ -14,10 +14,14 @@
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
   <!-- Turf.js -->
   <script src="https://unpkg.com/@turf/turf@6.5.0/turf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+
+  
 </head>
 <body>
 
 <h2>Find Your Roof</h2>
+<!-- Backgroung Map -->
 <div id="map"></div>
 
 <!-- Step 1: Address Search -->
@@ -116,6 +120,81 @@
   </div>
 </div>
 
+  <!-- User Details Form  -->
+
+<div id="userDetailsForm" style="max-width: 400px; margin: 1rem auto; padding: 1rem; border: 1px solid #ccc; border-radius: 8px;" class="overlay-hidden">
+  <h3>User Details</h3>
+
+  <label for="userName">Name:</label><br>
+  <input type="text" id="userName" required style="width: 100%;" name="user_name"><br><br>
+
+  <label for="userEmail">Email:</label><br>
+  <input type="email" id="userEmail" required style="width: 100%;" name="email"><br><br>
+
+  <div class="button-group-email">
+    <button id="backBtnStepEmail" class="nav-btn back" type="button">← Back</button>
+    <button id="nextBtnStepEmail" class="nav-btn next" style="margin-left: 150px;" type="submit">Send Inquiry</button>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+
+<!-- <script>
+  // Initialize EmailJS with your public key
+  emailjs.init("qlja5PymJaULmFs_K"); // replace with your actual EmailJS public key
+
+  const form = document.getElementById("userDetailsForm");
+  const backBtn = document.getElementById("backBtnStepEmail");
+
+  // Show your form container if it’s hidden
+  // form.classList.remove("overlay-hidden");
+const calculateCostBtn = document.getElementById("calculateCostBtn");
+  calculateCostBtn.addEventListener("click", function(e) {
+    e.preventDefault();
+
+    // Collect user inputs
+    const userName = document.getElementById("userName").value.trim();
+    const userEmail = document.getElementById("userEmail").value.trim();
+
+    // Collect choices from your app's other forms (replace with your actual logic)
+    const ownership = document.querySelector('input[name="ownership"]:checked')?.value || "Not specified";
+    const roofType = document.querySelector('input[name="roofType"]:checked')?.value || "Not specified";
+    const roofMaterial = document.querySelector('input[name="roofMaterial"]:checked')?.value || "Not specified";
+
+    // Get the calculated cost (from your roofAreaDisplay div or wherever it’s displayed)
+    const roofCost = document.getElementById("roofAreaDisplay")?.textContent.trim() || "Not calculated";
+
+    // Build a nicely formatted string of choices
+    const userChoices = `
+Ownership: ${ownership}
+Roof Type: ${roofType}
+Roof Material: ${roofMaterial}
+Calculated Cost: ${roofCost}
+    `;
+
+    // Prepare email template params
+    const templateParams = {
+      from_name: userName,
+      reply_to: userEmail,
+      user_choices: userChoices,
+      message: "A new inquiry has been submitted via Find Your Roof."
+    };
+
+    emailjs.send("service_5cbqqh9", "template_eacbawj", templateParams)
+      .then(() => {
+        alert("Thank you! Your inquiry has been sent successfully.");
+        form.reset();
+      }, (error) => {
+        console.error("Email sending failed:", error);
+        alert("Sorry, failed to send your inquiry. Please try again later.");
+      });
+  });
+
+
+  // });
+</script> -->
+
+<!-- Result  -->
 
 <div id="overlayStep6" class="overlay overlay-hidden">
   <h2>Your Roof Area</h2>
@@ -132,11 +211,8 @@
   </div>
 </div> 
 
-
-
-
-
     <script src="script.js"></script>
     <script src="https://unpkg.com/leaflet-draw/dist/leaflet.draw.js"></script>
+
 </body>
 </html>
